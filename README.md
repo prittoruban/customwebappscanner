@@ -1,300 +1,242 @@
-# Web Application Vulnerability Scanner
+# Web Application Vulnerability Scanner v2.0
 
-![Python](https://img.shields.io/badge/python-3.10+-blue.svg)
-![License](https://img.shields.io/badge/license-MIT-green.svg)
-![Status](https://img.shields.io/badge/status-educational-orange.svg)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-3776ab.svg?logo=python&logoColor=white)](https://python.org)
+[![License: MIT](https://img.shields.io/badge/license-MIT-22c55e.svg)](LICENSE)
+[![Scanners: 8](https://img.shields.io/badge/scanners-8-6c8aff.svg)]()
+[![Status: Production](https://img.shields.io/badge/status-production-22c55e.svg)]()
 
-## ⚠️ DISCLAIMER
-
-**This tool is for EDUCATIONAL and AUTHORIZED TESTING purposes ONLY.**
-
-- Use only on applications you own or have explicit written permission to test
-- Never use on production systems without proper authorization
-- Unauthorized testing of web applications is illegal
-- The authors assume no liability for misuse of this tool
-
-## 📋 Description
-
-A Python-based CLI vulnerability scanner that detects common web application security issues:
-
-- **XSS (Cross-Site Scripting)**: Reflected and stored XSS vulnerabilities
-- **SQLi (SQL Injection)**: Error-based, boolean-based, and time-based SQL injection
-- **CSRF (Cross-Site Request Forgery)**: Missing CSRF token protection
-
-### Features
-
-✅ Multi-threaded scanning for improved performance  
-✅ Automatic web crawling and form discovery  
-✅ Customizable payload files  
-✅ Multiple report formats (HTML, JSON, Console)  
-✅ Configurable crawl depth and thread count  
-✅ Clean, modular architecture  
-✅ Comprehensive logging with verbosity control  
-
-## 🏗️ Architecture
-
-```
-scanner/
-├── main.py                     # CLI entry point
-├── config.py                   # Configuration and defaults
-├── crawler/                    # Web crawling module
-│   ├── __init__.py
-│   └── crawler.py
-├── scanner/                    # Vulnerability detection modules
-│   ├── __init__.py
-│   ├── xss.py                  # XSS scanner
-│   ├── sqli.py                 # SQLi scanner
-│   └── csrf.py                 # CSRF scanner
-├── engine/                     # Multi-threaded execution engine
-│   ├── __init__.py
-│   └── executor.py
-├── reporter/                   # Report generation
-│   ├── __init__.py
-│   ├── report.py
-│   └── templates/
-│       └── report.html         # Jinja2 template
-├── payloads/                   # Attack payload files
-│   ├── xss.txt
-│   └── sqli.txt
-├── utils/                      # Utility modules
-│   ├── http.py                 # HTTP client wrapper
-│   └── logger.py               # Logging configuration
-└── requirements.txt
-```
-
-## 🚀 Installation
-
-### Prerequisites
-
-- Python 3.10 or higher
-- pip (Python package manager)
-
-### Setup
-
-1. **Clone or download this repository:**
-
-```bash
-cd scanner
-```
-
-2. **Create a virtual environment (recommended):**
-
-```bash
-python -m venv venv
-
-# On Linux/Mac:
-source venv/bin/activate
-
-# On Windows:
-venv\Scripts\activate
-```
-
-3. **Install dependencies:**
-
-```bash
-pip install -r requirements.txt
-```
-
-## 💻 Usage
-
-### Basic Usage
-
-Scan a target URL for all vulnerability types:
-
-```bash
-python main.py -u http://testphp.vulnweb.com --xss --sqli --csrf
-```
-
-### Common Examples
-
-**XSS scan only:**
-```bash
-python main.py -u http://example.com --xss
-```
-
-**SQLi and CSRF scan with 10 threads:**
-```bash
-python main.py -u http://example.com --sqli --csrf --threads 10
-```
-
-**Full scan with HTML report:**
-```bash
-python main.py -u http://example.com --xss --sqli --csrf --report html
-```
-
-**Deep crawl with JSON report:**
-```bash
-python main.py -u http://example.com --xss --depth 5 --report json
-```
-
-**Verbose logging for debugging:**
-```bash
-python main.py -u http://example.com --xss --sqli -v
-```
-
-### Command-Line Options
-
-```
-Required Arguments:
-  -u URL, --url URL            Target URL to scan
-
-Scan Types:
-  --xss                        Enable XSS scanning
-  --sqli                       Enable SQL injection scanning
-  --csrf                       Enable CSRF scanning
-
-Crawler Options:
-  --depth N                    Maximum crawl depth (default: 2)
-
-Scanner Options:
-  --threads N                  Number of concurrent threads (default: 5)
-  --payload-dir PATH           Custom payload directory
-
-Report Options:
-  --report {html,json,both}    Report format (default: console)
-
-Other:
-  -v, --verbose                Enable verbose/debug logging
-  -h, --help                   Show help message
-```
-
-## 📊 Output
-
-### Console Output
-
-The scanner provides real-time progress updates and a summary report:
-
-```
-╔═══════════════════════════════════════════════════════════════════╗
-║   🔒 Web Application Vulnerability Scanner v1.0                  ║
-╚═══════════════════════════════════════════════════════════════════╝
-
-🕷️  Crawling http://example.com...
-✓ Crawl complete. Found 5 form(s) across 10 page(s)
-
-🔍 Starting vulnerability scan with 5 thread(s)...
-✓ Scan complete. Found 3 vulnerabilities
-
-VULNERABILITY SCAN REPORT
-======================================================================
-Target: http://example.com
-Total Vulnerabilities Found: 3
-
-By Severity:
-  HIGH: 2
-  MEDIUM: 1
-```
-
-### HTML Report
-
-Beautiful, styled HTML reports with:
-- Summary statistics and risk scores
-- Vulnerability details table
-- Severity color-coding
-- Evidence snippets
-
-Reports are saved to `scanner/reports/scan_report_TIMESTAMP.html`
-
-### JSON Report
-
-Machine-readable JSON format for integration with other tools:
-
-```json
-{
-  "scan_info": {
-    "target_url": "http://example.com",
-    "scan_date": "2026-01-06T12:00:00"
-  },
-  "statistics": {
-    "total_vulnerabilities": 3,
-    "by_type": {"XSS": 2, "CSRF": 1}
-  },
-  "findings": [...]
-}
-```
-
-## 🎯 Testing Targets
-
-**Safe testing environments:**
-
-- [DVWA (Damn Vulnerable Web Application)](http://www.dvwa.co.uk/)
-- [OWASP Juice Shop](https://owasp.org/www-project-juice-shop/)
-- [WebGoat](https://owasp.org/www-project-webgoat/)
-- [bWAPP](http://www.itsecgames.com/)
-- [Mutillidae](https://github.com/webpwnized/mutillidae)
-
-**Online testing sites:**
-- http://testphp.vulnweb.com/
-- http://demo.testfire.net/
-
-## 🔧 Customization
-
-### Custom Payloads
-
-Edit payload files in `scanner/payloads/`:
-- `xss.txt` - XSS test vectors
-- `sqli.txt` - SQL injection payloads
-
-Each line is a separate payload. Lines starting with `#` are comments.
-
-### Configuration
-
-Modify `scanner/config.py` to adjust:
-- Timeouts and retry settings
-- Thread limits
-- Crawl parameters
-- Detection patterns
-
-## 🛡️ Security Considerations
-
-This tool performs **active** security testing which may:
-- Generate suspicious traffic
-- Trigger security monitoring systems
-- Modify application state (CSRF tests)
-- Create load on target servers
-
-**Always ensure you have proper authorization before scanning.**
-
-## 📚 How It Works
-
-### 1. Crawling Phase
-- Starts from provided URL
-- Follows links within same domain
-- Extracts forms with all input fields
-- Respects configured depth limit
-
-### 2. Scanning Phase
-- **XSS**: Injects payloads into inputs, checks for reflection
-- **SQLi**: Tests for syntax errors, time delays, boolean conditions
-- **CSRF**: Identifies POST forms lacking CSRF tokens
-
-### 3. Reporting Phase
-- Aggregates findings by severity
-- Generates reports in requested formats
-- Provides actionable vulnerability details
-
-## 🤝 Contributing
-
-This is an educational demo project. Improvements welcome:
-- Additional vulnerability types (XXE, SSRF, etc.)
-- Enhanced detection accuracy
-- Better payload libraries
-- Performance optimizations
-
-## 📄 License
-
-MIT License - See LICENSE file for details
-
-## 👤 Author
-
-Created for educational and security research purposes.
-
-## 🔗 Resources
-
-- [OWASP Top 10](https://owasp.org/www-project-top-ten/)
-- [OWASP Testing Guide](https://owasp.org/www-project-web-security-testing-guide/)
-- [PortSwigger Web Security Academy](https://portswigger.net/web-security)
+> **Disclaimer** — This tool is strictly for educational and authorized security testing. Use only on systems you own or have explicit written permission to test. Unauthorized scanning is illegal.
 
 ---
 
-**Remember: With great power comes great responsibility. Use ethically!** 🛡️
+## What Is This?
+
+A production-grade CLI vulnerability scanner built in Python that detects 8 classes of web application vulnerabilities, identifies compound attack chains, and generates framework-specific remediation code.
+
+### What Makes It Different
+
+| Feature | Typical Scanners | This Scanner |
+|---|---|---|
+| XSS Detection | Pattern matching | **Context-aware** — canary injection, detects HTML/attribute/JS/URL/CSS contexts |
+| SQLi Detection | Error-string grep | **Differential analysis** — error-based + boolean-blind (response similarity) + time-based (baseline-calibrated) |
+| Post-Scan Analysis | Flat finding list | **Vulnerability chain detection** — 7 rules linking compound attack paths (e.g. XSS + missing CSP = CRITICAL) |
+| Remediation | Generic description | **Auto-generated fix code** — copy-paste-ready for Flask, Django, Express.js, PHP |
+
+---
+
+## Scan Types
+
+| Flag | Vulnerability | Technique |
+|---|---|---|
+| `--xss` | Cross-Site Scripting | Context-aware canary probing + reflection verification |
+| `--sqli` | SQL Injection | Error-based + Boolean-blind + Time-based with baseline calibration |
+| `--csrf` | Cross-Site Request Forgery | Token detection + Shannon entropy analysis + active testing |
+| `--ssrf` | Server-Side Request Forgery | Cloud metadata, internal IP, scheme tricks (30+ payloads) |
+| `--lfi` | Local File Inclusion | Path traversal, null byte, double encoding, PHP wrappers |
+| `--cmdi` | Command Injection / RCE | Output-based + blind time-based detection |
+| `--redirect` | Open Redirect | Location header, meta refresh, JS redirect analysis |
+| `--headers` | Security Headers & Cookies | CSP, CORS, HSTS, cookie flags (passive scan) |
+| `--all` | **All of the above** | Enables every scanner |
+
+---
+
+## Quick Start
+
+```bash
+# 1. Clone & enter
+git clone <repo-url> && cd customwebappscanner
+
+# 2. Create venv and install
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r scanner/requirements.txt
+
+# 3. Run a full scan
+cd scanner
+python3 main.py -u http://testphp.vulnweb.com --all
+
+# 4. Generate an HTML report with Django remediation
+python3 main.py -u http://testphp.vulnweb.com --all --framework python_django --report html
+```
+
+---
+
+## CLI Reference
+
+```
+usage: main.py [-h] -u URL [--all] [--xss] [--sqli] [--csrf] [--ssrf]
+               [--lfi] [--cmdi] [--redirect] [--headers]
+               [--depth DEPTH] [--threads THREADS] [--payload-dir DIR]
+               [--framework {python_flask,python_django,javascript_express,php}]
+               [--report {html,json,both}] [-v]
+```
+
+### Required
+
+| Argument | Description |
+|---|---|
+| `-u`, `--url` | Target URL (must start with `http://` or `https://`) |
+
+### Scan Selection
+
+| Argument | Default | Description |
+|---|---|---|
+| `--all` | off | Enable all 8 scan types |
+| `--xss` | off | XSS scan |
+| `--sqli` | off | SQL Injection scan |
+| `--csrf` | off | CSRF scan |
+| `--ssrf` | off | SSRF scan |
+| `--lfi` | off | LFI / Path Traversal scan |
+| `--cmdi` | off | Command Injection scan |
+| `--redirect` | off | Open Redirect scan |
+| `--headers` | off | Security Headers (passive) |
+
+### Options
+
+| Argument | Default | Description |
+|---|---|---|
+| `--depth` | `2` | Maximum crawl depth (0–10) |
+| `--threads` | `5` | Concurrent scan threads (1–50) |
+| `--payload-dir` | `scanner/payloads/` | Custom payload directory |
+| `--framework` | `python_flask` | Remediation code target: `python_flask`, `python_django`, `javascript_express`, `php` |
+| `--report` | `console` | Output format: `html`, `json`, `both` |
+| `-v` | off | Verbose debug logging |
+
+### Examples
+
+```bash
+# XSS + SQLi only, 10 threads, HTML report
+python3 main.py -u http://example.com --xss --sqli --threads 10 --report html
+
+# Full scan with deep crawl
+python3 main.py -u http://example.com --all --depth 5
+
+# SSRF + Headers check with Express.js remediation
+python3 main.py -u http://example.com --ssrf --headers --framework javascript_express
+
+# All scans, all reports
+python3 main.py -u http://example.com --all --report both
+```
+
+---
+
+## Output Formats
+
+### Console (default)
+
+Severity-sorted findings table with CWE/OWASP references, chain links, and a sample remediation code block.
+
+### HTML (`--report html`)
+
+Dark-themed responsive report with:
+- Severity stat cards + risk score
+- Detailed findings table (CWE, OWASP, confidence)
+- Vulnerability chain section
+- Remediation code blocks per finding
+
+Saved to `scanner/reports/scan_report_<timestamp>.html`
+
+### JSON (`--report json`)
+
+Machine-readable output for CI/CD integration. Full schema includes all 18 Finding fields, scan metadata, and statistics.
+
+Saved to `scanner/reports/scan_report_<timestamp>.json`
+
+---
+
+## Project Structure
+
+```
+customwebappscanner/
+├── .gitignore
+├── README.md                      ← You are here
+├── docs/
+│   ├── ARCHITECTURE.md            ← System design & data flow
+│   ├── API.md                     ← Module-level API reference
+│   └── CONTRIBUTING.md            ← Development workflow
+│
+└── scanner/                       ← Main package
+    ├── main.py                    ← CLI entry point
+    ├── config.py                  ← Global configuration
+    ├── requirements.txt           ← Python dependencies
+    │
+    ├── models/                    ← Shared data models
+    │   ├── __init__.py
+    │   └── finding.py             ← Finding, ScanResult, SeverityLevel
+    │
+    ├── crawler/                   ← Web crawling
+    │   ├── __init__.py
+    │   └── crawler.py             ← BFS crawler + form extraction
+    │
+    ├── scanner/                   ← Vulnerability scanners (8 modules)
+    │   ├── __init__.py
+    │   ├── base.py                ← BaseScanner ABC
+    │   ├── xss.py                 ← Context-aware XSS
+    │   ├── sqli.py                ← Differential SQLi
+    │   ├── csrf.py                ← CSRF + entropy analysis
+    │   ├── ssrf.py                ← SSRF scanner
+    │   ├── lfi.py                 ← LFI / path traversal
+    │   ├── cmdi.py                ← Command injection / RCE
+    │   ├── redirect.py            ← Open redirect
+    │   └── headers.py             ← Security headers (passive)
+    │
+    ├── engine/                    ← Execution & analysis
+    │   ├── __init__.py
+    │   ├── executor.py            ← ThreadPool executor
+    │   ├── chain_detector.py      ← Vulnerability chain detection
+    │   └── remediation.py         ← Auto-remediation code gen
+    │
+    ├── reporter/                  ← Report generation
+    │   ├── __init__.py
+    │   ├── report.py              ← Console / HTML / JSON
+    │   └── templates/
+    │       └── report.html        ← Jinja2 dark-themed template
+    │
+    ├── payloads/                  ← Attack payload files
+    │   ├── xss.txt
+    │   ├── sqli.txt
+    │   ├── ssrf.txt
+    │   ├── lfi.txt
+    │   ├── cmdi.txt
+    │   └── redirect.txt
+    │
+    ├── utils/                     ← Shared utilities
+    │   ├── __init__.py
+    │   ├── http.py                ← HTTP client (rate limiting, retries)
+    │   └── logger.py              ← Logging configuration
+    │
+    ├── reports/                   ← Generated reports (git-ignored)
+    └── tests/
+        └── test_basic.py          ← 34-test validation suite
+```
+
+---
+
+## Dependencies
+
+| Package | Version | Purpose |
+|---|---|---|
+| requests | ≥ 2.31.0 | HTTP client |
+| beautifulsoup4 | ≥ 4.12.0 | HTML parsing & form extraction |
+| Jinja2 | ≥ 3.1.0 | HTML report templating |
+| lxml | ≥ 4.9.0 | Fast HTML parser backend |
+| colorama | ≥ 0.4.6 | Colored terminal output |
+| urllib3 | ≥ 2.0.0 | URL handling |
+
+Python 3.10+ required.
+
+---
+
+## Running Tests
+
+```bash
+cd scanner
+python3 tests/test_basic.py
+```
+
+34 tests covering: module imports, Finding model, ScanResult properties, all 8 scanner instantiations, chain detection, remediation enrichment, executor lifecycle, report generation, config sanity, and payload file validation.
+
+---
+
+## License
+
+MIT — see [LICENSE](LICENSE) for details.
